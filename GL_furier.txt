@@ -1,0 +1,23 @@
+k = 0;
+n = 800;
+L = randn(1, n);
+threshold = 0.5;
+delta = 0.99;
+
+for k = 1:n
+    a = unifrnd(0, 0.1, 1, k);
+    idx = randperm(numel(a), fix(numel(a) / 3));
+    sbs = ind2sub(size(L), idx);
+    S = false(size(L));
+    S(sbs) = 1;
+    Ys = L .* S;
+    W = abs(ifft(Ys));
+    
+    gamma = (threshold^2) / 4;
+    
+    if any(W > gamma)
+        L = [L, W(W > gamma)];
+    end
+end
+
+L
